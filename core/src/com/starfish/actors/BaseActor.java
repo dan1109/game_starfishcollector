@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,6 +23,7 @@ public class BaseActor extends Actor {
 	private float acceleration;
 	private float maxSpeed;
 	private float decelaration;
+	private Polygon boundaryPolygon;
 
 	public BaseActor(final float x, final float y, Stage stage) {
 		super();
@@ -44,6 +46,9 @@ public class BaseActor extends Actor {
 		float h = tr.getRegionHeight();
 		setSize(w, h);
 		setOrigin(w/2, h/2);
+		if (boundaryPolygon == null) {
+			setBoundaryPolygon();
+		}
 	}
 
 	public void setAnimationPaused(boolean animationPaused) {
@@ -185,5 +190,12 @@ public class BaseActor extends Actor {
 		setSpeed(speed);
 		moveBy(velocityVec.x * dt, velocityVec.y * dt);
 		accelerationVec.set(0,0);
+	}
+
+	public void setBoundaryPolygon() {
+		final float w = getWidth();
+		final float h = getHeight();
+		final float[] vertices = {0, 0, w, 0, w, h, h, 0};
+		this.boundaryPolygon = new Polygon(vertices);
 	}
 }
