@@ -198,4 +198,16 @@ public class BaseActor extends Actor {
 		final float[] vertices = {0, 0, w, 0, w, h, h, 0};
 		this.boundaryPolygon = new Polygon(vertices);
 	}
+
+	public void setBoundaryPolygon(int numSides) {
+		final float w = getWidth();
+		final float h = getHeight();
+		final float[] vertices = new float[2 * numSides];
+		for (int index = 0; index < numSides; index++) {
+			float angle = index * 6.28f / numSides;
+			vertices[2 * index] = w/2 * MathUtils.cos(angle) + w/2;
+			vertices[2 * index+1] = h/2 * MathUtils.sin(angle) + h/2;
+		}
+		boundaryPolygon = new Polygon(vertices);
+	}
 }
