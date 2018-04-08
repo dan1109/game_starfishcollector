@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -210,4 +207,37 @@ public class BaseActor extends Actor {
 		}
 		boundaryPolygon = new Polygon(vertices);
 	}
+
+	public Polygon getBoundaryPolygon() {
+		boundaryPolygon.setPosition(getX(), getY());
+		boundaryPolygon.setOrigin(getOriginX(), getOriginY());
+		boundaryPolygon.setRotation(getRotation());
+		boundaryPolygon.setScale(getScaleX(), getScaleY());
+		return boundaryPolygon;
+	}
+
+	public boolean overlaps(BaseActor other) {
+		Polygon poly1= this.getBoundaryPolygon();
+		Polygon poly2 = other.getBoundaryPolygon();
+		boolean result = false;
+		if (!poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle())) {
+		    result = false;
+		} else {
+			result = Intersector.overlapConvexPolygons(poly1, poly2);
+		}
+		return result;
+	}
+
+	public void centerAtPosition(float x, float y) {
+		setPosition(x - getWidth()/2, y - getHeight()/2);
+	}
+
+	public void centerAtActor(BaseActor other) {
+		centerAtPosition(other.getX() + other.getWidth()/2, other.getY() + other.getHeight()/2);
+	}
+
+	public void setOpacity(float opacity) {
+		getColor().a = opacity;
+	}
+
 }

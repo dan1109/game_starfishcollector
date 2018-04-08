@@ -9,9 +9,10 @@ public class Turtle extends BaseActor {
 		super(x, y, stage);
 		String[] fileNames  = {"turtle-1.png", "turtle-2.png","turtle-3.png","turtle-4.png","turtle-5.png","turtle-6.png"};
 		loadAnimationFromFiles(fileNames, 0.1f, true);
-		setMaxSpeed(200);
-		setAcceleration(500);
+		setMaxSpeed(50);
+		setAcceleration(150);
 		setDecelaration(100);
+		setBoundaryPolygon(8);
 	}
 
 
