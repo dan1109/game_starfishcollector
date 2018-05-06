@@ -3,10 +3,7 @@ package com.starfish;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.starfish.actors.BaseActor;
-import com.starfish.actors.Starfish;
-import com.starfish.actors.Turtle;
-import com.starfish.actors.Whirlpool;
+import com.starfish.actors.*;
 import com.starfish.game.GameBase;
 
 public class StarfishCollector extends GameBase {
@@ -15,6 +12,7 @@ public class StarfishCollector extends GameBase {
 	private Starfish starfish;
 	private BaseActor ocean;
 	private Boolean win;
+	private Rock rock;
 
 	@Override
 	protected void initialize() {
@@ -23,12 +21,13 @@ public class StarfishCollector extends GameBase {
 		ocean.setSize(800,600);
 		starfish = new Starfish(380,380,mainStage);
 		turtle = new Turtle(20,20,mainStage);
+		rock = new Rock(200,200, mainStage);
 		win = false;
 	}
 
 	@Override
 	protected void update(float delta) {
-
+		turtle.preventOverlap(rock);
 		if (turtle.overlaps(starfish) && !starfish.isCollected()) {
 			starfish.collect();
 			Whirlpool whirl = new Whirlpool(0,0, mainStage);
