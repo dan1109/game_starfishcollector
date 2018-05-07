@@ -10,6 +10,10 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.compression.lzma.Base;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseActor extends Actor {
 	private Animation<TextureRegion> animation;
@@ -21,6 +25,7 @@ public class BaseActor extends Actor {
 	private float maxSpeed;
 	private float decelaration;
 	private Polygon boundaryPolygon;
+	private static Rectangle worldBounds;
 
 	public BaseActor(final float x, final float y, Stage stage) {
 		super();
@@ -34,6 +39,29 @@ public class BaseActor extends Actor {
 		acceleration = 0;
 		maxSpeed = 1000;
 		decelaration = 0;
+	}
+
+	public void boundToWorld() {
+		if (getX() < 0) {
+			setX(0);
+		}
+		if (getX() + getWidth() > worldBounds.width) {
+			setX(worldBounds.width - getWidth());
+		}
+		if (getY() < 0) {
+			setY(0);
+		}
+		if (getY() + getHeight() > worldBounds.height) {
+			setY(worldBounds.height - getHeight());
+		}
+	}
+
+	public static void setWorldBounds(float width, float height) {
+		worldBounds = new Rectangle(0,0,width,height);
+	}
+
+	public static void setWorldBounds(BaseActor base) {
+		setWorldBounds(base.getWidth(), base.getHeight());
 	}
 
 	public void setAnimation(Animation<TextureRegion> animation) {
@@ -253,6 +281,27 @@ public class BaseActor extends Actor {
 		}
 		this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
 		return mtv.normal;
+	}
+
+	public static List<BaseActor> getList(Stage stage, String className) {
+		List<BaseActor> list = new ArrayList<BaseActor>();
+		Class clazz = null;
+		try {
+			clazz = Class.forName(String.format("com.starfish.actors.%s",className));
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+
+		for (Actor actor : stage.getActors()) {
+			if (clazz.isInstance(actor)) {
+				list.add((BaseActor) actor);
+			}
+		}
+		return list;
+	}
+
+	public static int count(Stage stage, String className) {
+		return getList(stage, className).size();
 	}
 
 }
