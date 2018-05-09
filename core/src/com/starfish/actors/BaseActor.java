@@ -1,6 +1,7 @@
 package com.starfish.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.compression.lzma.Base;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -302,6 +304,17 @@ public class BaseActor extends Actor {
 
 	public static int count(Stage stage, String className) {
 		return getList(stage, className).size();
+	}
+
+	public void alignCamera() {
+		Camera camera = this.getStage().getCamera();
+		Viewport viewport = this.getStage().getViewport();
+		camera.position.set(this.getX() + this.getOriginX(), this.getY() + getOriginY(),0);
+		camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth/2,
+				worldBounds.width - camera.viewportWidth/2);
+		camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight/2,
+				worldBounds.height - camera.viewportHeight/2);
+		camera.update();
 	}
 
 }
